@@ -4,3 +4,9 @@
 [submodule "art-appraiser-directory-frontend"]
 	path = art-appraiser-directory-frontend
 	url = https://github.com/Appraisily/art-appraiser-directory-frontend
+[submodule "art-appraisers-landing"]
+	path = art-appraisers-landing
+	url = https://github.com/Appraisily/art-appraisers-landing
+[submodule "screener-page-module"]
+	path = screener-page-module
+	url = https://github.com/Appraisily/screener-page-module
