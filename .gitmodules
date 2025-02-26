@@ -1,0 +1,6 @@
+[submodule "main_page"]
+	path = main_page
+	url = https://github.com/Appraisily/main_page
+[submodule "art-appraiser-directory-frontend"]
+	path = art-appraiser-directory-frontend
+	url = https://github.com/Appraisily/art-appraiser-directory-frontend
