@@ -1,0 +1,18 @@
+{
+  "name": "appraisily-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Monorepo for Appraisily website and services",
+  "scripts": {
+    "apply-patches": "node scripts/apply-patches.js",
+    "build:main": "cd main_page && npm install && npm run build",
+    "build:directory": "cd art-appraiser-directory-frontend && npm install && npm run build",
+    "build": "npm run apply-patches && npm run build:main && npm run build:directory && node scripts/merge-builds.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "fs-extra": "^11.2.0"
+  }
+} 
