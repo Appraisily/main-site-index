@@ -11,6 +11,23 @@
   to = "/directory/:splat"
   status = 200
 
+# Redirect for the art appraisers landing pages
+[[redirects]]
+  from = "/art-appraiser/*"
+  to = "/landing/art-appraiser/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/painting-value/*"
+  to = "/landing/painting-value/:splat"
+  status = 200
+
+# Redirect for the art appraisal screener pages
+[[redirects]]
+  from = "/screener/*"
+  to = "/screener/:splat"
+  status = 200
+
 # Art appraiser specific paths
 [[redirects]]
   from = "/location/*"

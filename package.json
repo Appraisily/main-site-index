@@ -7,7 +7,9 @@
     "apply-patches": "node scripts/apply-patches.js",
     "build:main": "cd main_page && npm install && npm run build",
     "build:directory": "cd art-appraiser-directory-frontend && npm install && npm run build",
-    "build": "npm run apply-patches && npm run build:main && npm run build:directory && node scripts/merge-builds.js",
+    "build:landing": "cd art-appraisers-landing && npm install && npm run build",
+    "build:screener": "cd screener-page-module && npm install && cd .. && node scripts/build-screener.js",
+    "build": "npm run apply-patches && npm run build:main && npm run build:directory && npm run build:landing && npm run build:screener && node scripts/merge-builds.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

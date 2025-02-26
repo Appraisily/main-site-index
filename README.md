@@ -8,6 +8,8 @@ The repository contains the following submodules:
 
 - `main_page`: The main Appraisily website
 - `art-appraiser-directory-frontend`: The art appraiser directory site
+- `art-appraisers-landing`: Landing pages for art appraisers
+- `screener-page-module`: Appraisal screener pages for user qualification
 
 ## Routes
 
@@ -17,6 +19,9 @@ The combined application has the following route structure:
 - `/directory/*` - Art appraiser directory (from `art-appraiser-directory-frontend` submodule)
 - `/location/*` - Location-specific pages from the directory, redirected to `/directory/location/*`
 - `/appraiser/*` - Appraiser-specific pages from the directory, redirected to `/directory/appraiser/*`
+- `/art-appraiser/*` - Art appraiser landing pages, redirected to `/landing/art-appraiser/*`
+- `/painting-value/*` - Painting value landing pages, redirected to `/landing/painting-value/*`
+- `/screener/*` - Appraisal screener pages (from `screener-page-module` submodule)
 
 ## Development
 
