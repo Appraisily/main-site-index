@@ -23,6 +23,27 @@ The combined application has the following route structure:
 - `/painting-value/*` - Painting value landing pages, redirected to `/landing/painting-value/*`
 - `/screener/*` - Appraisal screener pages (from `screener-page-module` submodule)
 
+### Route Tracking and Sitemap
+
+The repo includes an automatic route tracking system that scans all submodules to generate:
+
+1. A comprehensive `sitemap.xml` file for SEO purposes
+2. A `routes.json` file listing all available routes
+
+These files are automatically generated during the build process and placed in the `dist` directory.
+
+To manually generate the route tracking files:
+
+```bash
+npm run routes
+```
+
+The route tracking system works by:
+- Statically defining common routes
+- Scanning React Router configurations in each submodule
+- Parsing component files to detect page routes
+- Analyzing data files to detect dynamic routes
+
 ## Development
 
 ### Prerequisites
@@ -52,6 +73,7 @@ The build process involves:
 1. Applying patches to submodules (like setting the correct base paths)
 2. Building each submodule individually
 3. Merging the builds into a unified structure in the `dist` directory
+4. Generating the sitemap and route tracking files
 
 To build the project:
 
@@ -80,6 +102,7 @@ git submodule add https://github.com/your-org/new-project.git
 2. Update the build scripts in `package.json` to include the new submodule
 3. Modify `scripts/merge-builds.js` to include the new submodule in the merged build
 4. Add appropriate redirects in `netlify.toml`
+5. Update the route tracking system in `scripts/generate-sitemap.js` to include routes from the new submodule
 
 ## Updating Submodules
 

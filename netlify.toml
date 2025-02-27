@@ -39,6 +39,13 @@
   to = "/directory/appraiser/:splat"
   status = 200
 
+# Sitemap configuration
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml"
+    X-Robots-Tag = "noarchive"
+
 # Handle client-side routing for main application
 [[redirects]]
   from = "/*"
