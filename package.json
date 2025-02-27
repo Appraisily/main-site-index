@@ -9,20 +9,15 @@
     "build:directory": "cd art-appraiser-directory-frontend && npm install && npm run build",
     "build:landing": "cd art-appraisers-landing && npm install && npm run build",
     "build:screener": "cd screener-page-module && npm install && cd .. && node scripts/build-screener.js",
-    "build:image-generation": "cd image-generation-service && npm install && npm run build",
-    "generate-appraiser-images": "cd image-generation-service && node src/generate-images.js",
-    "integrate-appraiser-images": "node scripts/integrate-generated-images.js",
     "build:sitemap": "node scripts/generate-sitemap.js",
-    "build": "npm run apply-patches && npm run build:image-generation && npm run generate-appraiser-images && npm run build:directory && npm run integrate-appraiser-images && npm run build:main && npm run build:landing && npm run build:screener && node scripts/merge-builds.js && npm run build:sitemap",
-    "routes": "npm run build:sitemap",
+    "build": "npm run apply-patches && npm run build:main && npm run build:directory && npm run build:landing && npm run build:screener && node scripts/merge-builds.js && npm run build:sitemap",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "axios": "^1.6.7",
     "fs-extra": "^11.2.0",
-    "glob": "^8.1.0",
-    "globby": "^11.1.0",
-    "prettier": "^2.8.8"
+    "xmlbuilder2": "^3.1.1"
   }
 } 
