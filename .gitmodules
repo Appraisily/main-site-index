@@ -10,3 +10,6 @@
 [submodule "screener-page-module"]
 	path = screener-page-module
 	url = https://github.com/Appraisily/screener-page-module
+[submodule "image-generation-service"]
+	path = image-generation-service
+	url = https://github.com/Appraisily/image-generation-service

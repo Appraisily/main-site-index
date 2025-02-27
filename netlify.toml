@@ -32,12 +32,29 @@
 [[redirects]]
   from = "/location/*"
   to = "/directory/location/:splat"
-  status = 200
+  status = 301
 
 [[redirects]]
   from = "/appraiser/*"
   to = "/directory/appraiser/:splat"
+  status = 301
+
+# Redirects for image generation service API endpoints
+[[redirects]]
+  from = "/api/generate"
+  to = "/.netlify/functions/image-generation-proxy"
   status = 200
+
+[[redirects]]
+  from = "/api/generate-bulk"
+  to = "/.netlify/functions/image-generation-proxy"
+  status = 200
+
+# Redirects for image generation service images
+[[redirects]]
+  from = "/images/*"
+  to = "/directory/images/appraisers/:splat"
+  status = 301
 
 # Sitemap configuration
 [[headers]]
@@ -52,7 +69,7 @@
   to = "/index.html"
   status = 200
 
-# Security Headers based on main_page settings
+# Security Headers
 [[headers]]
   for = "/*"
   [headers.values]
