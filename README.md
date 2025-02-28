@@ -10,7 +10,7 @@ The repository contains the following submodules:
 - `art-appraiser-directory-frontend`: The art appraiser directory site
 - `art-appraisers-landing`: Landing pages for art appraisers
 - `screener-page-module`: Appraisal screener pages for user qualification
-- `image-generation-service`: AI image generation service for appraiser profiles
+- `image-generation-service`: AI image generation service for appraiser and location profiles
 
 ## Routes
 
@@ -45,18 +45,33 @@ The route tracking system works by:
 - Parsing component files to detect page routes
 - Analyzing data files to detect dynamic routes
 
-### Appraiser Profile Image Generation
+## AI Image Generation System
 
-The repository includes an AI image generation system that automatically creates professional profile images for art appraisers who don't have one. This system:
+The repository includes an advanced AI image generation system that automatically creates professional images for both appraisers and locations in the directory.
+
+### Appraiser Profile Images
+
+The system automatically generates professional portrait images for art appraisers:
 
 1. Scans the appraiser directory for profiles without images during the build process
-2. Generates photorealistic profile images using fal-ai's Flux Ultra model
+2. Generates photorealistic portrait images using Flux Ultra model
 3. Integrates the generated images into the directory build
-4. Implements intelligent caching to avoid unnecessary regeneration
+4. Updates appraiser data with ImageKit CDN URLs
 
-The image generation process uses appraiser data (gender, specialization, etc.) to create tailored images that match the appraiser's profile. Generated images are stored both locally and in ImageKit CDN for persistence between builds and fast global delivery.
+### Location Images
 
-For more information, see the [Image Generation Service README](./image-generation-service/README.md).
+The system also generates professional images for gallery, museum, and office locations:
+
+1. Identifies locations without images in the directory data
+2. Generates type-specific images tailored to:
+   - **Galleries**: Modern art galleries with exhibition spaces
+   - **Museums**: Classical museum architecture with grand entrances
+   - **Auction Houses**: Elegant auction venues with refined facades
+   - **Offices**: Professional office buildings with clean entrances
+3. Customizes the images based on location details (name, city, features)
+4. Updates location data with persistent ImageKit CDN URLs
+
+For detailed documentation on the image generation system, see [APPRAISER_IMAGES.md](./APPRAISER_IMAGES.md).
 
 ## Development
 
@@ -82,18 +97,46 @@ npm install
 
 ### Build Process
 
-The build process involves:
-
-1. Applying patches to submodules (like setting the correct base paths)
-2. Initializing the image generation service and generating appraiser profile images
-3. Building each submodule individually
-4. Merging the builds into a unified structure in the `dist` directory
-5. Generating the sitemap and route tracking files
-
-To build the project:
+#### Standard Build
+The standard build process compiles all submodules without generating images:
 
 ```bash
 npm run build
+```
+
+#### Build with Image Generation
+To build with automatic image generation for appraisers and locations:
+
+```bash
+npm run build-with-images
+```
+
+This comprehensive build process:
+
+1. Applies patches to submodules (router basenames, etc.)
+2. Identifies appraisers and locations without images
+3. Generates missing images using the AI image generation service
+4. Updates data files with new image URLs
+5. Builds each submodule individually
+6. Merges all builds into a unified structure in the `dist` directory
+7. Generates the sitemap and route tracking files
+
+### Testing Image Generation
+
+To test the image generation system in isolation:
+
+```bash
+# Create test data
+npm run create-test         # For appraisers
+npm run create-test-locations  # For locations
+
+# Identify entities without images
+npm run identify            # For appraisers
+npm run identify-locations  # For locations
+
+# Generate images
+npm run generate            # For appraisers
+npm run generate-locations  # For locations
 ```
 
 ## Deployment
@@ -103,6 +146,12 @@ The site is configured to deploy on Netlify. The `netlify.toml` file contains:
 - Build configuration
 - Redirects to handle routing between the different apps
 - Security headers
+
+### Deployment Workflow
+
+1. Run the build-with-images command to generate a complete build with all images
+2. Deploy the contents of the `dist` directory to Netlify
+3. Verify that all routes and redirects are working correctly
 
 ## Adding New Submodules
 
@@ -126,6 +175,72 @@ To update all submodules to their latest versions:
 ```bash
 git submodule update --remote
 ```
+
+## Image Generation Service
+
+The image generation service is a separate component that provides AI-generated images via API endpoints:
+
+- `/api/generate` - For appraiser profile images
+- `/api/generate-location` - For location images (galleries, museums, offices)
+
+The service is deployed as a Cloud Run instance with the following features:
+
+- Black Forest AI integration for high-quality image generation
+- ImageKit CDN for global image delivery and persistence
+- Prompt optimization with GPT-4o when available
+- Fallback mechanisms for high availability
+
+### Local Development of the Image Service
+
+To develop the image generation service locally:
+
+```bash
+cd image-generation-service
+npm install
+npm run dev
+```
+
+Test endpoints with provided scripts:
+
+```bash
+# Test appraiser image generation
+node test-images.js
+
+# Test location image generation
+node test-location-images.js
+```
+
+## Configuration Options
+
+The build system includes several configuration options in `scripts/build-with-images.js`:
+
+```javascript
+const CONFIG = {
+  // Control whether to actually generate images or just simulate
+  generateImages: true,
+  // Maximum number of images to generate in one build (to control costs)
+  maxImagesToGenerate: 20,
+  // Enable location image generation
+  generateLocationImages: true
+};
+```
+
+These options allow control over:
+
+- Whether to generate images or just simulate the process (for testing)
+- How many images to generate per build (to control costs)
+- Whether to include location image generation
+
+## Troubleshooting
+
+Common issues and solutions:
+
+- **Missing appraiser data**: Run `npm run find-data` to locate the appraiser data file
+- **Image generation failures**: Check the logs in the `logs` directory for detailed error information
+- **Build failures**: Verify that all submodules are properly initialized and that patches apply cleanly
+- **Network issues**: Ensure the image generation service is accessible from your environment
+
+For more detailed troubleshooting, consult the logs generated during the build process.
 
 # Appraiser Image Generation Solution
 
