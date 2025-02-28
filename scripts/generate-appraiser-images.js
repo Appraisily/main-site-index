@@ -21,7 +21,7 @@ const CONFIG = {
   // Input file with appraisers needing images
   inputFile: path.join(__dirname, '../temp/appraisers-needing-images.json'),
   // Path to appraiser data - adjust this to your actual data path
-  appraisersDataFile: path.join(__dirname, '../data/appraisers.json'),
+  appraisersDataFile: path.join(__dirname, '../art-appraiser-directory-frontend/data/appraisers.json'),
   // Delay between API calls (in ms) to avoid overwhelming the service
   apiCallDelay: 3000,
   // Maximum concurrency for API calls

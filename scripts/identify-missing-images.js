@@ -12,7 +12,7 @@ async function identifyAppraisersWithoutImages() {
     console.log('Identifying appraisers without images...');
     
     // Path to appraiser data - adjust this to your actual data path
-    const appraisersPath = path.join(__dirname, '../data/appraisers.json');
+    const appraisersPath = path.join(__dirname, '../art-appraiser-directory-frontend/data/appraisers.json');
     
     // Check if the appraisers data file exists
     if (!await fs.pathExists(appraisersPath)) {

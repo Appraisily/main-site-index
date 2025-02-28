@@ -12,7 +12,7 @@ async function createTestData() {
     console.log('Creating sample appraiser data for testing...');
     
     // Create data directory if it doesn't exist
-    const dataDir = path.join(__dirname, '../data');
+    const dataDir = path.join(__dirname, '../art-appraiser-directory-frontend/data');
     await fs.ensureDir(dataDir);
     
     // Sample appraiser data

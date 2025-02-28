@@ -4,8 +4,8 @@
  * Usage: node scripts/build-with-images.js
  * 
  * This script:
- * 1. Identifies appraisers without images
- * 2. Generates images for those appraisers
+ * 1. Identifies appraisers and locations without images
+ * 2. Generates images for those appraisers and locations
  * 3. Builds the art-appraiser-directory with the updated images
  */
 
@@ -18,7 +18,9 @@ const CONFIG = {
   // Control whether to actually generate images or just simulate
   generateImages: true,
   // Maximum number of images to generate in one build (to control costs)
-  maxImagesToGenerate: 20
+  maxImagesToGenerate: 20,
+  // Enable location image generation
+  generateLocationImages: true
 };
 
 /**
@@ -53,7 +55,7 @@ function runCommand(command, args, options = {}) {
  */
 async function identifyMissingImages() {
   try {
-    console.log('\n🔍 STEP 1: Identifying appraisers without images...');
+    console.log('\n🔍 STEP 1A: Identifying appraisers without images...');
     await runCommand('node', ['scripts/identify-missing-images.js']);
     
     // Check if there are any appraisers without images
@@ -93,7 +95,62 @@ async function identifyMissingImages() {
       return 0;
     }
   } catch (error) {
-    console.error('Error identifying missing images:', error);
+    console.error('Error identifying missing appraiser images:', error);
+    return 0;
+  }
+}
+
+/**
+ * Identify locations without images
+ */
+async function identifyMissingLocationImages() {
+  try {
+    if (!CONFIG.generateLocationImages) {
+      console.log('Location image generation is disabled. Skipping identification step.');
+      return 0;
+    }
+    
+    console.log('\n🔍 STEP 1B: Identifying locations without images...');
+    await runCommand('node', ['scripts/identify-missing-location-images.js']);
+    
+    // Check if there are any locations without images
+    const tempDir = path.join(__dirname, '../temp');
+    const locationsFile = path.join(tempDir, 'locations-needing-images.json');
+    
+    if (await fs.pathExists(locationsFile)) {
+      const data = await fs.readJson(locationsFile);
+      
+      if (data.locations && data.locations.length > 0) {
+        console.log(`Found ${data.locations.length} locations without images.`);
+        
+        // If we're limiting the number of images to generate
+        if (CONFIG.maxImagesToGenerate > 0 && data.locations.length > CONFIG.maxImagesToGenerate) {
+          console.log(`Limiting to ${CONFIG.maxImagesToGenerate} location images per build to control costs.`);
+          
+          // Create a new file with limited locations
+          const limitedLocations = {
+            count: CONFIG.maxImagesToGenerate,
+            timestamp: data.timestamp,
+            locations: data.locations.slice(0, CONFIG.maxImagesToGenerate)
+          };
+          
+          await fs.writeJson(locationsFile, limitedLocations, { spaces: 2 });
+          console.log(`Limited to ${limitedLocations.locations.length} locations for image generation.`);
+          
+          return limitedLocations.locations.length;
+        }
+        
+        return data.locations.length;
+      } else {
+        console.log('No locations need images.');
+        return 0;
+      }
+    } else {
+      console.log('No locations need images or file not found.');
+      return 0;
+    }
+  } catch (error) {
+    console.error('Error identifying missing location images:', error);
     return 0;
   }
 }
@@ -104,7 +161,7 @@ async function identifyMissingImages() {
 async function generateImages(count) {
   try {
     if (count === 0) {
-      console.log('No images to generate. Skipping image generation step.');
+      console.log('No appraiser images to generate. Skipping image generation step.');
       return true;
     }
     
@@ -113,14 +170,41 @@ async function generateImages(count) {
       return true;
     }
     
-    console.log(`\n🖼️ STEP 2: Generating ${count} appraiser images...`);
+    console.log(`\n🖼️ STEP 2A: Generating ${count} appraiser images...`);
     await runCommand('node', ['scripts/generate-appraiser-images.js']);
-    console.log('Image generation complete.');
+    console.log('Appraiser image generation complete.');
     return true;
   } catch (error) {
-    console.error('Error generating images:', error);
+    console.error('Error generating appraiser images:', error);
     // Continue with build even if image generation fails
-    console.log('Continuing with build despite image generation failure.');
+    console.log('Continuing with build despite appraiser image generation failure.');
+    return false;
+  }
+}
+
+/**
+ * Generate images for locations without images
+ */
+async function generateLocationImages(count) {
+  try {
+    if (count === 0) {
+      console.log('No location images to generate. Skipping image generation step.');
+      return true;
+    }
+    
+    if (!CONFIG.generateImages || !CONFIG.generateLocationImages) {
+      console.log('Location image generation is disabled. Skipping image generation step.');
+      return true;
+    }
+    
+    console.log(`\n🖼️ STEP 2B: Generating ${count} location images...`);
+    await runCommand('node', ['scripts/generate-location-images.js']);
+    console.log('Location image generation complete.');
+    return true;
+  } catch (error) {
+    console.error('Error generating location images:', error);
+    // Continue with build even if image generation fails
+    console.log('Continuing with build despite location image generation failure.');
     return false;
   }
 }
@@ -160,11 +244,17 @@ async function main() {
     console.log('🚀 Starting build process with image generation...');
     console.log('===============================================');
     
-    // Step 1: Identify missing images
-    const count = await identifyMissingImages();
+    // Step 1A: Identify missing appraiser images
+    const appraiserCount = await identifyMissingImages();
     
-    // Step 2: Generate images
-    await generateImages(count);
+    // Step 1B: Identify missing location images
+    const locationCount = await identifyMissingLocationImages();
+    
+    // Step 2A: Generate appraiser images
+    await generateImages(appraiserCount);
+    
+    // Step 2B: Generate location images
+    await generateLocationImages(locationCount);
     
     // Step 3: Build directory
     await buildDirectory();
