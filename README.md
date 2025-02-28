@@ -26,12 +26,12 @@ The combined application has the following route structure:
 
 ### Route Tracking and Sitemap
 
-The repo includes an automatic route tracking system that scans all submodules to generate:
+The monorepo includes a system for tracking all routes across submodules and generating:
 
 1. A comprehensive `sitemap.xml` file for SEO purposes
-2. A `routes.json` file listing all available routes
+2. A `sitemap_index.xml` file that references all sitemaps from submodules
 
-These files are automatically generated during the build process and placed in the `dist` directory.
+The sitemap index serves as a central reference point for search engines, allowing them to discover all sitemaps from the various submodules through a single entry point.
 
 To manually generate the route tracking files:
 
