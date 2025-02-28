@@ -50,11 +50,11 @@ The route tracking system works by:
 The repository includes an AI image generation system that automatically creates professional profile images for art appraisers who don't have one. This system:
 
 1. Scans the appraiser directory for profiles without images during the build process
-2. Generates photorealistic profile images using Google's Vertex AI
+2. Generates photorealistic profile images using fal-ai's Flux Ultra model
 3. Integrates the generated images into the directory build
 4. Implements intelligent caching to avoid unnecessary regeneration
 
-The image generation process uses appraiser data (gender, specialization, etc.) to create tailored images that match the appraiser's profile. Generated images are stored both locally and in Google Cloud Storage for persistence between builds.
+The image generation process uses appraiser data (gender, specialization, etc.) to create tailored images that match the appraiser's profile. Generated images are stored both locally and in ImageKit CDN for persistence between builds and fast global delivery.
 
 For more information, see the [Image Generation Service README](./image-generation-service/README.md).
 
