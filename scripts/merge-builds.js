@@ -85,6 +85,9 @@ async function mergeBuilds() {
     console.log('Injecting Google Tag Manager code into HTML files...');
     await injectGoogleTagManager();
     
+    // After merging all builds, update robots.txt
+    updateRobotsTxt();
+    
     console.log('Build merge completed successfully!');
   } catch (error) {
     console.error('Error merging builds:', error);
@@ -168,6 +171,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     console.log(`- Errors in ${errorCount} files`);
   } catch (error) {
     console.error('Error injecting Google Tag Manager:', error);
+  }
+}
+
+// Function to update robots.txt to point to sitemap_index.xml
+function updateRobotsTxt() {
+  const robotsPath = path.join(outputPath, 'robots.txt');
+  const SITE_URL = process.env.SITE_URL || 'https://www.appraisily.com';
+  
+  if (fs.existsSync(robotsPath)) {
+    console.log('Updating robots.txt to reference sitemap_index.xml...');
+    
+    let robotsContent = fs.readFileSync(robotsPath, 'utf8');
+    
+    // Check if sitemap is already referenced
+    const sitemapRegex = /Sitemap: .+/g;
+    
+    if (sitemapRegex.test(robotsContent)) {
+      // Replace existing sitemap reference
+      robotsContent = robotsContent.replace(
+        sitemapRegex, 
+        `Sitemap: ${SITE_URL}/sitemap_index.xml`
+      );
+    } else {
+      // Add sitemap reference if not present
+      if (!robotsContent.includes('# Sitemaps')) {
+        robotsContent += '\n# Sitemaps\n';
+      }
+      robotsContent += `Sitemap: ${SITE_URL}/sitemap_index.xml\n`;
+    }
+    
+    fs.writeFileSync(robotsPath, robotsContent);
+    console.log('robots.txt updated successfully.');
+  } else {
+    console.log('robots.txt not found. Creating new robots.txt file...');
+    
+    // Create basic robots.txt file with sitemap reference
+    const robotsContent = `User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: ${SITE_URL}/sitemap_index.xml
+`;
+    
+    fs.writeFileSync(robotsPath, robotsContent);
+    console.log('robots.txt created successfully.');
   }
 }
 

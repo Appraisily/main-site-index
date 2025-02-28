@@ -5,7 +5,7 @@ Disallow: /wp-content/uploads/wpforms/
 Disallow:
 
 # Sitemaps
-Sitemap: https://resources.appraisily.com/sitemap_index.xml
+Sitemap: https://www.appraisily.com/sitemap_index.xml
 
 # Crawl-delay
 Crawl-delay: 10
