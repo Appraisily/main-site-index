@@ -58,17 +58,17 @@ async function generateImageForAppraiser(appraiser) {
     });
     
     // Check for successful response
-    if (response.status === 200 && response.data && response.data.imageUrl) {
+    if (response.status === 200 && response.data && response.data.success && response.data.data && response.data.data.imageUrl) {
       console.log(`✅ Successfully generated image for ${appraiser.firstName} ${appraiser.lastName} (${appraiser.id})`);
       return {
         appraiser,
         success: true,
-        imageUrl: response.data.imageUrl,
-        originalUrl: response.data.originalUrl || null,
+        imageUrl: response.data.data.imageUrl,
+        originalUrl: response.data.data.originalUrl || null,
         error: null
       };
     } else {
-      console.error(`❌ Failed to generate image for ${appraiser.id} - Invalid response:`, response.data);
+      console.error(`❌ Failed to generate image for ${appraiser.id} - Invalid response:`, JSON.stringify(response.data, null, 2));
       return {
         appraiser,
         success: false,
@@ -154,6 +154,11 @@ async function updateAppraiserData(results) {
     results.forEach(result => {
       if (result.success && result.imageUrl) {
         resultMap[result.appraiser.id] = result.imageUrl;
+        console.log(`Adding image URL for ${result.appraiser.id}: ${result.imageUrl}`);
+      } else if (result.imageUrl) {
+        // Handle case where success might be false but we still have an imageUrl
+        resultMap[result.appraiser.id] = result.imageUrl;
+        console.log(`Adding image URL for ${result.appraiser.id} despite failed status: ${result.imageUrl}`);
       }
     });
     
