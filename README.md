@@ -155,18 +155,27 @@ The site is configured to deploy on Netlify. The `netlify.toml` file contains:
 
 ## Adding New Submodules
 
-To add a new submodule:
+To add a new submodule to the monorepo:
 
-1. Add the Git submodule:
+1. Add the submodule using Git:
+   ```bash
+   git submodule add https://github.com/Appraisily/your-new-module.git your-new-module
+   ```
 
-```bash
-git submodule add https://github.com/your-org/new-project.git
-```
+2. Create a build script in the `scripts` directory (e.g., `build-new-module.js`)
 
-2. Update the build scripts in `package.json` to include the new submodule
-3. Modify `scripts/merge-builds.js` to include the new submodule in the merged build
-4. Add appropriate redirects in `netlify.toml`
+3. Add the build script to the `package.json` scripts section:
+   ```json
+   "build:new-module": "cd your-new-module && npm install && npm run build",
+   ```
+
+4. Update the main build script in `package.json` to include your new module
+
 5. Update the route tracking system in `scripts/generate-sitemap.js` to include routes from the new submodule
+
+6. Update the sitemap index in `scripts/generate-sitemap-index.js` to include the sitemap from the new submodule
+
+7. Update the `scripts/merge-builds.js` script to copy the build output to the correct location
 
 ## Updating Submodules
 
