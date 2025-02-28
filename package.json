@@ -11,7 +11,10 @@
     "build:screener": "cd screener-page-module && npm install && cd .. && node scripts/build-screener.js",
     "build:sitemap": "node scripts/generate-sitemap.js",
     "build": "npm run apply-patches && npm run build:main && npm run build:directory && npm run build:landing && npm run build:screener && node scripts/merge-builds.js && npm run build:sitemap",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "create-test": "node scripts/create-test-data.js",
+    "identify": "node scripts/identify-missing-images.js",
+    "generate": "node scripts/generate-appraiser-images.js"
   },
   "author": "",
   "license": "ISC",

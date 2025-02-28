@@ -125,4 +125,127 @@ To update all submodules to their latest versions:
 
 ```bash
 git submodule update --remote
-``` 
+```
+
+# Appraiser Image Generation Solution
+
+This project provides tools to efficiently generate and manage professional profile images for art appraisers in the directory. The solution is designed to minimize the cost of image generation by only generating images that don't already exist.
+
+## Features
+
+- **Identifies Missing Images**: Analyzes the appraiser data to identify which appraisers need profile images.
+- **Batch Processing**: Processes appraisers in batches with controlled concurrency to avoid overwhelming the image generation service.
+- **Persistent Storage**: Generated images are stored in ImageKit CDN for fast global delivery.
+- **Data Management**: Updates appraiser data with the URLs of generated images.
+- **Comprehensive Logging**: Tracks the image generation process and results for auditing and troubleshooting.
+
+## Prerequisites
+
+- Node.js v14 or higher
+- Access to the image generation service
+- ImageKit CDN for image storage
+- Appraiser data in JSON format
+
+## Setup
+
+1. Clone this repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Ensure the image generation service is running or accessible via the URL in the configuration
+
+## Usage
+
+The solution consists of three main scripts:
+
+### 1. Create Test Data (for Testing Only)
+
+Creates sample appraiser data for testing the workflow.
+
+```
+npm run create-test
+```
+
+or
+
+```
+node scripts/create-test-data.js
+```
+
+### 2. Identify Missing Images
+
+Scans the appraiser data and identifies which appraisers need images.
+
+```
+npm run identify
+```
+
+or
+
+```
+node scripts/identify-missing-images.js
+```
+
+This creates a JSON file with the list of appraisers who need images in the `temp` directory.
+
+### 3. Generate Images
+
+Processes the list of appraisers who need images, calls the image generation service, and updates the appraiser data with the image URLs.
+
+```
+npm run generate
+```
+
+or
+
+```
+node scripts/generate-appraiser-images.js
+```
+
+## Configuration
+
+The scripts use configuration objects that can be adjusted:
+
+- **Image Service URL**: Change the URL of the image generation service in `generate-appraiser-images.js`.
+- **Batch Size**: Adjust the number of appraisers processed in each batch.
+- **Concurrency**: Control how many simultaneous API calls are made.
+- **Delay**: Set the delay between API calls to avoid throttling.
+
+## Workflow
+
+1. Run the identify script to find appraisers who need images
+2. Review the output JSON file to confirm the list of appraisers
+3. Run the generate script to create images for these appraisers
+4. Check the logs directory for detailed results of the image generation process
+
+## Example Output
+
+The scripts provide detailed console output and generate log files:
+
+```
+Starting appraiser image generation...
+Using image service: https://image-generation-service-856401495068.us-central1.run.app/api/generate
+Found 5 appraisers needing images.
+Processing 5 appraisers in 1 batches...
+Processing batch 1 of 1 (5 appraisers)
+Generating image for appraiser: John Smith (test-001)
+Generating image for appraiser: Jane Doe (test-002)
+Generating image for appraiser: Robert Johnson (test-003)
+...
+```
+
+## Troubleshooting
+
+- If the image generation service is unavailable, check the service status and URL.
+- For authentication issues, ensure the service has proper credentials.
+- If images are not being saved to ImageKit, verify the ImageKit configuration in the image generation service.
+
+## Contributing
+
+Improvements and bug fixes are welcome. Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request 
