@@ -21,7 +21,8 @@
     "find-data": "node scripts/find-appraiser-data.js",
     "create-test-locations": "node scripts/create-test-location-data.js",
     "identify-locations": "node scripts/identify-missing-location-images.js",
-    "generate-locations": "node scripts/generate-location-images.js"
+    "generate-locations": "node scripts/generate-location-images.js",
+    "fix-missing-images": "node scripts/fix-missing-images.js"
   },
   "author": "",
   "license": "ISC",
