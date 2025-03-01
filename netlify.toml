@@ -52,11 +52,13 @@
     [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Define headers for the sitemap - separate header block
+# Define headers for the sitemap - complete configuration
 [[headers]]
   for = "/sitemap.xml"
     [headers.values]
     Cache-Control = "public, max-age=3600"
+    Content-Type = "application/xml"
+    X-Robots-Tag = "noarchive"
 
 # Redirect for the art appraiser directory
 [[redirects]]
@@ -97,13 +99,6 @@
   from = "/images/*"
   to = "/directory/images/appraisers/:splat"
   status = 301
-
-# Sitemap configuration
-[[headers]]
-  for = "/sitemap.xml"
-  [headers.values]
-    Content-Type = "application/xml"
-    X-Robots-Tag = "noarchive"
 
 # Security Headers
 [[headers]]
