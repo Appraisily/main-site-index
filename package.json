@@ -28,7 +28,8 @@
     "prebuild": "npm run generate-images:local",
     "dev": "node src/server.js",
     "start": "node src/server.js",
-    "build": "echo \"Building the project...\" && node src/server.js"
+    "build": "echo \"Building the project...\" && node src/server.js",
+    "check-images": "node scripts/check-live-images.js"
   },
   "author": "",
   "license": "ISC",
