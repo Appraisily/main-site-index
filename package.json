@@ -22,7 +22,13 @@
     "create-test-locations": "node scripts/create-test-location-data.js",
     "identify-locations": "node scripts/identify-missing-location-images.js",
     "generate-locations": "node scripts/generate-location-images.js",
-    "fix-missing-images": "node scripts/fix-missing-images.js"
+    "fix-missing-images": "node scripts/fix-missing-images.js",
+    "generate-images": "node scripts/generate-missing-images.js",
+    "generate-images:local": "node scripts/generate-missing-images-local.js",
+    "prebuild": "npm run generate-images:local",
+    "dev": "node src/server.js",
+    "start": "node src/server.js",
+    "build": "echo \"Building the project...\" && node src/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -32,6 +38,11 @@
     "xmlbuilder2": "^3.1.1"
   },
   "dependencies": {
-    "glob": "^11.0.1"
+    "glob": "^11.0.1",
+    "@google-cloud/storage": "^6.9.5",
+    "@google-cloud/secret-manager": "^4.1.3",
+    "express": "^4.18.2",
+    "openai": "^4.28.0",
+    "node-fetch": "^2.6.7"
   }
 }

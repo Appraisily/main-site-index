@@ -1,0 +1,55 @@
+{
+  "city": "Chicago",
+  "state": "IL",
+  "data": {
+    "data": {
+      "appraisers": [
+        {
+          "id": "chicago-art-experts",
+          "name": "Chicago Art Experts",
+          "specialties": ["Fine Art", "Antiques"],
+          "pricing": ["$300/hour", "$2,000/day"],
+          "services_offered": ["Insurance Appraisals", "Estate Valuations"],
+          "certifications": ["ASA", "USPAP"],
+          "years_in_business": 25,
+          "city": "Chicago",
+          "state": "IL",
+          "phone": "312-555-1234",
+          "website": "www.chicagoartexperts.com",
+          "notes": "Specializing in 20th century American art",
+          "imageUrl": null
+        },
+        {
+          "id": "windy-city-appraisers",
+          "name": "Windy City Appraisers",
+          "specialties": ["Modern Art", "Sculptures"],
+          "pricing": ["$275/hour"],
+          "services_offered": ["Insurance Appraisals", "Donation Valuations"],
+          "certifications": ["ISA", "USPAP"],
+          "years_in_business": 15,
+          "city": "Chicago",
+          "state": "IL",
+          "phone": "312-555-5678",
+          "website": "www.windycityappraisers.com",
+          "notes": "Focus on modern and contemporary art",
+          "imageUrl": "https://invalid-image-url.com/broken-image.jpg"
+        },
+        {
+          "id": "lakefront-appraisal-services",
+          "name": "Lakefront Appraisal Services",
+          "specialties": ["Prints", "Photographs"],
+          "pricing": ["$250/hour", "$1,800/day"],
+          "services_offered": ["Estate Valuations", "Private Collection Appraisals"],
+          "certifications": ["AAA", "USPAP"],
+          "years_in_business": 10,
+          "city": "Chicago",
+          "state": "IL",
+          "phone": "312-555-9012",
+          "website": "www.lakefrontappraisals.com",
+          "notes": "Expertise in photography and prints",
+          "imageUrl": "https://this-image-doesnt-exist.jpg"
+        }
+      ]
+    }
+  }
+} 
