@@ -1,0 +1,15 @@
+build:
+  environment:
+    # Specify Node.js version
+    NODE_VERSION: 18
+  
+  # Run before the build command
+  prebuild:
+    # Init and update submodules to ensure all are available
+    - command: git submodule update --init --recursive
+    
+    # Debug information
+    - command: echo "Current directory structure:"
+    - command: ls -la
+    - command: echo "Submodule directory structure:"
+    - command: ls -la art-appraiser-directory-frontend 

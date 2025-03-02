@@ -19,6 +19,9 @@ dist/
 build/
 */build/
 
+# IMPORTANT: Exclude Netlify CLI local folder
+.netlify/
+
 # Logs
 logs
 *.log
