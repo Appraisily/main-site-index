@@ -31,7 +31,8 @@
     "dev": "node src/server.js",
     "start": "node src/server.js",
     "build": "echo \"Building the project...\" && node src/server.js",
-    "check-images": "node scripts/check-live-images.js"
+    "check-images": "node scripts/check-live-images.js",
+    "build:simple": "node scripts/build-simple.js"
   },
   "author": "",
   "license": "ISC",
