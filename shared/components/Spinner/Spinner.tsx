@@ -1,4 +1,3 @@
-import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg';
@@ -34,4 +33,4 @@ export const Spinner = ({ size = 'md', className }: SpinnerProps) => {
       <span className="sr-only">Loading...</span>
     </div>
   );
-}; 
+};

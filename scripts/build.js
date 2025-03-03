@@ -2,7 +2,7 @@
 
 /**
  * Build script for Appraisily monorepo
- * 
+ *
  * This script:
  * 1. Builds all submodules
  * 2. Consolidates their dist directories into the root dist directory
@@ -54,23 +54,36 @@ fs.writeFileSync(
 // Build each submodule
 for (const submodule of submodules) {
   console.log(chalk.yellow(`\nBuilding ${submodule}...`));
-  
+
   try {
     // Run the build command in the submodule directory
     execSync('npm run build', {
       cwd: path.resolve(__dirname, '..', submodule),
-      stdio: 'inherit'
+      stdio: 'inherit',
     });
-    
+
     console.log(chalk.green(`✅ ${submodule} built successfully`));
-    
+
     // Copy built files to the consolidated dist directory
     const submoduleDistDir = path.resolve(__dirname, '..', submodule, 'dist');
     const targetDir = path.join(rootDistDir, submodule, 'dist');
-    
+
     if (fs.existsSync(submoduleDistDir)) {
       console.log(chalk.yellow(`Copying ${submodule} dist files...`));
       fs.copySync(submoduleDistDir, targetDir);
+
+      // Fix the asset paths in the HTML files
+      const htmlFilePath = path.join(targetDir, 'index.html');
+      if (fs.existsSync(htmlFilePath)) {
+        console.log(chalk.yellow(`Fixing asset paths in ${submodule}/dist/index.html...`));
+        let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
+
+        // Replace absolute paths with relative paths
+        htmlContent = htmlContent.replace(/src="\/assets\//g, `src="${submodule}/dist/assets/`);
+        htmlContent = htmlContent.replace(/href="\/assets\//g, `href="${submodule}/dist/assets/`);
+
+        fs.writeFileSync(htmlFilePath, htmlContent);
+      }
     } else {
       console.error(chalk.red(`❌ ${submodule} dist directory not found!`));
       process.exit(1);
@@ -88,12 +101,18 @@ fs.writeFileSync(
   path.join(rootDistDir, '_redirects'),
   `# Main Page Routes - Keep at root
 /                           /main_page/dist/index.html           200
+/main_page/dist/assets/*    /main_page/dist/assets/:splat        200
 /assets/*                   /main_page/dist/assets/:splat        200
 
 # Art Appraisers Landing Routes
 /art-appraisers/*           /art-appraisers-landing/dist/index.html    200
 /art-appraisers/assets/*    /art-appraisers-landing/dist/assets/:splat 200
+/art-appraisers-landing/dist/assets/*  /art-appraisers-landing/dist/assets/:splat 200
 /painting-value/*           /art-appraisers-landing/dist/index.html    200
+
+# Test Submodule Routes (if enabled)
+/test-submodule/*           /test-submodule/dist/index.html    200
+/test-submodule/assets/*    /test-submodule/dist/assets/:splat 200
 
 # Handle fallback for client-side routing
 /*                          /main_page/dist/index.html           200
@@ -108,4 +127,4 @@ console.log(chalk.yellow('\nTo test locally:'));
 console.log('npx serve -s dist');
 
 // Exit with success code
-process.exit(0); 
+process.exit(0);
