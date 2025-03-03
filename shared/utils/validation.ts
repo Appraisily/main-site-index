@@ -8,7 +8,7 @@
  * @returns True if the email is valid, false otherwise
  */
 export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
@@ -18,11 +18,11 @@ export function isValidEmail(email: string): boolean {
  * @returns True if the phone number is valid, false otherwise
  */
 export function isValidPhone(phone: string): boolean {
-  // Remove all non-digit characters for validation
-  const digitsOnly = phone.replace(/\D/g, '');
-  
-  // US phone numbers should have 10 digits after removing formatting
-  return digitsOnly.length === 10;
+  // This is a simple validation that checks if the phone number
+  // has at least 10 digits. In a real application, you would want
+  // to use a more sophisticated validation based on your requirements.
+  const phoneRegex = /^\+?[0-9]{10,15}$/;
+  return phoneRegex.test(phone.replace(/\s+/g, '').replace(/-/g, ''));
 }
 
 /**
