@@ -1,0 +1,78 @@
+/**
+ * Shared Theme Variables
+ * These CSS variables define common values used across all Appraisily applications
+ */
+
+:root {
+  /* Color Palette */
+  --color-primary: #1e40af;        /* Blue 800 */
+  --color-primary-light: #3b82f6;  /* Blue 500 */
+  --color-primary-dark: #1e3a8a;   /* Blue 900 */
+  
+  --color-secondary: #71717a;      /* Zinc 500 */
+  --color-secondary-light: #a1a1aa; /* Zinc 400 */
+  --color-secondary-dark: #52525b; /* Zinc 600 */
+  
+  --color-success: #16a34a;        /* Green 600 */
+  --color-warning: #d97706;        /* Amber 600 */
+  --color-error: #dc2626;          /* Red 600 */
+  --color-info: #0284c7;           /* Sky 600 */
+  
+  --color-background: #ffffff;     /* White */
+  --color-surface: #f8fafc;        /* Slate 50 */
+  --color-text: #1e293b;           /* Slate 800 */
+  --color-text-light: #64748b;     /* Slate 500 */
+  
+  /* Typography */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-heading: var(--font-family-base);
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-2xl: 3rem;     /* 48px */
+  
+  /* Border Radius */
+  --radius-sm: 0.125rem;   /* 2px */
+  --radius-md: 0.25rem;    /* 4px */
+  --radius-lg: 0.5rem;     /* 8px */
+  --radius-xl: 1rem;       /* 16px */
+  --radius-full: 9999px;   /* Full rounded */
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  
+  /* Z-index layers */
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-modal: 1050;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+}
+
+/* Dark mode overrides - can be enabled in submodules as needed */
+.dark-mode {
+  --color-background: #0f172a;     /* Slate 900 */
+  --color-surface: #1e293b;        /* Slate 800 */
+  --color-text: #f1f5f9;           /* Slate 100 */
+  --color-text-light: #cbd5e1;     /* Slate 300 */
+}
+
+/* Media query variables for responsive design */
+@custom-media --viewport-sm (min-width: 640px);
+@custom-media --viewport-md (min-width: 768px);
+@custom-media --viewport-lg (min-width: 1024px);
+@custom-media --viewport-xl (min-width: 1280px);
+@custom-media --viewport-2xl (min-width: 1536px); 

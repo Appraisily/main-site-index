@@ -37,6 +37,7 @@ pids
 
 # Coverage directory used by tools like istanbul
 coverage
+*/coverage
 
 # Service account keys and secrets
 */config/service-account-key.json
@@ -49,6 +50,8 @@ image-generation-service/data/prompts/
 # Dependency directories
 .npm
 .yarn
+.pnp
+.pnp.js
 
 # Optional npm cache directory
 .npm
@@ -63,6 +66,22 @@ image-generation-service/data/prompts/
 .DS_Store
 */.DS_Store
 
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
 # Temporary folders
 tmp/
-temp/ 
+temp/
+
+# Storybook
+storybook-static/
+*/storybook-static/
+
+# Turbo
+.turbo
+
+# Local Netlify folder
+.netlify 

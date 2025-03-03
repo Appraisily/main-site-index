@@ -1,91 +1,31 @@
 # Appraisily Monorepo
 
-This repository contains multiple Appraisily projects as Git submodules that are deployed as a single application on Netlify.
+This monorepo contains all integrated applications for the Appraisily platform. It provides a unified development and deployment workflow while maintaining clean separation between different parts of the application.
 
-## Structure
+## Repository Structure
 
-The repository contains the following submodules:
+- **main_page**: The main Appraisily website application
+- **art-appraisers-landing**: Landing page for art appraisers
+- **shared**: Shared components, utilities, and types used across all applications
+  - **components**: Reusable UI components
+  - **styles**: Shared styles and theme definitions
+  - **utils**: Common utility functions
+  - **types**: TypeScript type definitions and interfaces
+- **scripts**: Build and utility scripts for the monorepo
 
-- `main_page`: The main Appraisily website
-- `art-appraiser-directory-frontend`: The art appraiser directory site
-- `art-appraisers-landing`: Landing pages for art appraisers
-- `screener-page-module`: Appraisal screener pages for user qualification
-- `image-generation-service`: AI image generation service for appraiser and location profiles
-
-## Routes
-
-The combined application has the following route structure:
-
-- `/` - Main website (from `main_page` submodule)
-- `/directory/*` - Art appraiser directory (from `art-appraiser-directory-frontend` submodule)
-- `/location/*` - Location-specific pages from the directory, redirected to `/directory/location/*`
-- `/appraiser/*` - Appraiser-specific pages from the directory, redirected to `/directory/appraiser/*`
-- `/art-appraiser/*` - Art appraiser landing pages, redirected to `/landing/art-appraiser/*`
-- `/painting-value/*` - Painting value landing pages, redirected to `/landing/painting-value/*`
-- `/screener/*` - Appraisal screener pages (from `screener-page-module` submodule)
-
-### Route Tracking and Sitemap
-
-The monorepo includes a system for tracking all routes across submodules and generating:
-
-1. A comprehensive `sitemap.xml` file for SEO purposes
-2. A `sitemap_index.xml` file that references all sitemaps from submodules
-
-The sitemap index serves as a central reference point for search engines, allowing them to discover all sitemaps from the various submodules through a single entry point.
-
-To manually generate the route tracking files:
-
-```bash
-npm run routes
-```
-
-The route tracking system works by:
-- Statically defining common routes
-- Scanning React Router configurations in each submodule
-- Parsing component files to detect page routes
-- Analyzing data files to detect dynamic routes
-
-## AI Image Generation System
-
-The repository includes an advanced AI image generation system that automatically creates professional images for both appraisers and locations in the directory.
-
-### Appraiser Profile Images
-
-The system automatically generates professional portrait images for art appraisers:
-
-1. Scans the appraiser directory for profiles without images during the build process
-2. Generates photorealistic portrait images using Flux Ultra model
-3. Integrates the generated images into the directory build
-4. Updates appraiser data with ImageKit CDN URLs
-
-### Location Images
-
-The system also generates professional images for gallery, museum, and office locations:
-
-1. Identifies locations without images in the directory data
-2. Generates type-specific images tailored to:
-   - **Galleries**: Modern art galleries with exhibition spaces
-   - **Museums**: Classical museum architecture with grand entrances
-   - **Auction Houses**: Elegant auction venues with refined facades
-   - **Offices**: Professional office buildings with clean entrances
-3. Customizes the images based on location details (name, city, features)
-4. Updates location data with persistent ImageKit CDN URLs
-
-For detailed documentation on the image generation system, see [APPRAISER_IMAGES.md](./APPRAISER_IMAGES.md).
-
-## Development
+## Getting Started
 
 ### Prerequisites
 
-- Node.js v20 or higher
-- npm
+- Node.js 18+ and npm 8+
+- Git with support for submodules
 
-### Setup
+### Initial Setup
 
 1. Clone this repository with submodules:
 
 ```bash
-git clone --recurse-submodules https://github.com/your-org/main-site-index.git
+git clone --recurse-submodules https://github.com/Appraisily/main-site-index.git
 cd main-site-index
 ```
 
@@ -95,281 +35,92 @@ cd main-site-index
 npm install
 ```
 
-### Build Process
+This will set up all workspace packages and create the necessary shared directories.
 
-#### Standard Build
-The standard build process compiles all submodules without generating images:
+### Development
+
+To start development on a specific application:
+
+```bash
+# For the main page
+npm run dev:main
+
+# For the art appraisers landing page
+npm run dev:landing
+```
+
+### Building for Production
+
+To build all applications for production:
 
 ```bash
 npm run build
 ```
 
-#### Build with Image Generation
-To build with automatic image generation for appraisers and locations:
+This builds all submodules and consolidates them in the `dist` directory for unified deployment.
 
-```bash
-npm run build-with-images
+## Working with Submodules
+
+### Importing Shared Components and Utilities
+
+In any submodule, you can import shared components and utilities:
+
+```tsx
+// Import a shared component
+import { Button } from 'shared/components';
+
+// Import utility functions
+import { formatCurrency, isValidEmail } from 'shared/utils';
+
+// Import types
+import { User, AppraiserProfile } from 'shared/types';
 ```
 
-This comprehensive build process:
-
-1. Applies patches to submodules (router basenames, etc.)
-2. Identifies appraisers and locations without images
-3. Generates missing images using the AI image generation service
-4. Updates data files with new image URLs
-5. Builds each submodule individually
-6. Merges all builds into a unified structure in the `dist` directory
-7. Generates the sitemap and route tracking files
-
-### Testing Image Generation
-
-To test the image generation system in isolation:
-
-```bash
-# Create test data
-npm run create-test         # For appraisers
-npm run create-test-locations  # For locations
-
-# Identify entities without images
-npm run identify            # For appraisers
-npm run identify-locations  # For locations
-
-# Generate images
-npm run generate            # For appraisers
-npm run generate-locations  # For locations
-```
-
-## Deployment
-
-The site is configured to deploy on Netlify. The `netlify.toml` file contains:
-
-- Build configuration
-- Redirects to handle routing between the different apps
-- Security headers
-
-### Deployment Workflow
-
-1. Run the build-with-images command to generate a complete build with all images
-2. Deploy the contents of the `dist` directory to Netlify
-3. Verify that all routes and redirects are working correctly
-
-## Adding New Submodules
+### Adding a New Submodule
 
 To add a new submodule to the monorepo:
 
-1. Add the submodule using Git:
-   ```bash
-   git submodule add https://github.com/Appraisily/your-new-module.git your-new-module
-   ```
-
-2. Create a build script in the `scripts` directory (e.g., `build-new-module.js`)
-
-3. Add the build script to the `package.json` scripts section:
-   ```json
-   "build:new-module": "cd your-new-module && npm install && npm run build",
-   ```
-
-4. Update the main build script in `package.json` to include your new module
-
-5. Update the route tracking system in `scripts/generate-sitemap.js` to include routes from the new submodule
-
-6. Update the sitemap index in `scripts/generate-sitemap-index.js` to include the sitemap from the new submodule
-
-7. Update the `scripts/merge-builds.js` script to copy the build output to the correct location
-
-## Updating Submodules
-
-To update all submodules to their latest versions:
+1. Add it as a Git submodule:
 
 ```bash
-git submodule update --remote
+git submodule add https://github.com/Appraisily/new-module-name.git
 ```
 
-## Image Generation Service
+2. Add it to the workspaces in `package.json`
 
-The image generation service is a separate component that provides AI-generated images via API endpoints:
+3. Configure its build settings and routing in the appropriate configuration files
 
-- `/api/generate` - For appraiser profile images
-- `/api/generate-location` - For location images (galleries, museums, offices)
+## Deployment
 
-The service is deployed as a Cloud Run instance with the following features:
+The monorepo is configured for deployment to Netlify:
 
-- Black Forest AI integration for high-quality image generation
-- ImageKit CDN for global image delivery and persistence
-- Prompt optimization with GPT-4o when available
-- Fallback mechanisms for high availability
+1. Netlify will use the `build` command defined in the root `package.json`
+2. The build script consolidates all submodule builds in the `dist` directory
+3. Routing is handled via the `_redirects` file created during the build process
+4. Each submodule is accessible at its designated URL path
 
-### Local Development of the Image Service
+## Integration Strategy
 
-To develop the image generation service locally:
+This monorepo follows the strategy outlined in [MONOREPO_INTEGRATION_PLAN.md](./MONOREPO_INTEGRATION_PLAN.md), which provides a detailed roadmap for the integration process.
 
-```bash
-cd image-generation-service
-npm install
-npm run dev
-```
+## Development Guidelines
 
-Test endpoints with provided scripts:
+When working in this monorepo:
 
-```bash
-# Test appraiser image generation
-node test-images.js
-
-# Test location image generation
-node test-location-images.js
-```
-
-## Configuration Options
-
-The build system includes several configuration options in `scripts/build-with-images.js`:
-
-```javascript
-const CONFIG = {
-  // Control whether to actually generate images or just simulate
-  generateImages: true,
-  // Maximum number of images to generate in one build (to control costs)
-  maxImagesToGenerate: 20,
-  // Enable location image generation
-  generateLocationImages: true
-};
-```
-
-These options allow control over:
-
-- Whether to generate images or just simulate the process (for testing)
-- How many images to generate per build (to control costs)
-- Whether to include location image generation
+1. **Keep submodules clean**: Only add code to a submodule that is specific to that application
+2. **Use shared code**: If functionality could be reused, add it to the appropriate shared directory
+3. **Maintain typings**: Always use TypeScript for type safety across submodules
+4. **Document changes**: Keep documentation up-to-date as you make changes
+5. **Test thoroughly**: Ensure changes don't break other parts of the application
 
 ## Troubleshooting
 
-Common issues and solutions:
+### Common Issues
 
-- **Missing appraiser data**: Run `npm run find-data` to locate the appraiser data file
-- **Image generation failures**: Check the logs in the `logs` directory for detailed error information
-- **Build failures**: Verify that all submodules are properly initialized and that patches apply cleanly
-- **Network issues**: Ensure the image generation service is accessible from your environment
+- **Submodule changes not reflected**: Make sure you're on the right branch in each submodule and have pulled the latest changes
+- **Workspace package not found**: Run `npm install` from the root directory again
+- **Build failing**: Check that all dependencies are installed and that each submodule builds correctly individually
 
-For more detailed troubleshooting, consult the logs generated during the build process.
+## License
 
-# Appraiser Image Generation Solution
-
-This project provides tools to efficiently generate and manage professional profile images for art appraisers in the directory. The solution is designed to minimize the cost of image generation by only generating images that don't already exist.
-
-## Features
-
-- **Identifies Missing Images**: Analyzes the appraiser data to identify which appraisers need profile images.
-- **Batch Processing**: Processes appraisers in batches with controlled concurrency to avoid overwhelming the image generation service.
-- **Persistent Storage**: Generated images are stored in ImageKit CDN for fast global delivery.
-- **Data Management**: Updates appraiser data with the URLs of generated images.
-- **Comprehensive Logging**: Tracks the image generation process and results for auditing and troubleshooting.
-
-## Prerequisites
-
-- Node.js v14 or higher
-- Access to the image generation service
-- ImageKit CDN for image storage
-- Appraiser data in JSON format
-
-## Setup
-
-1. Clone this repository
-2. Install dependencies:
-   ```
-   npm install
-   ```
-3. Ensure the image generation service is running or accessible via the URL in the configuration
-
-## Usage
-
-The solution consists of three main scripts:
-
-### 1. Create Test Data (for Testing Only)
-
-Creates sample appraiser data for testing the workflow.
-
-```
-npm run create-test
-```
-
-or
-
-```
-node scripts/create-test-data.js
-```
-
-### 2. Identify Missing Images
-
-Scans the appraiser data and identifies which appraisers need images.
-
-```
-npm run identify
-```
-
-or
-
-```
-node scripts/identify-missing-images.js
-```
-
-This creates a JSON file with the list of appraisers who need images in the `temp` directory.
-
-### 3. Generate Images
-
-Processes the list of appraisers who need images, calls the image generation service, and updates the appraiser data with the image URLs.
-
-```
-npm run generate
-```
-
-or
-
-```
-node scripts/generate-appraiser-images.js
-```
-
-## Configuration
-
-The scripts use configuration objects that can be adjusted:
-
-- **Image Service URL**: Change the URL of the image generation service in `generate-appraiser-images.js`.
-- **Batch Size**: Adjust the number of appraisers processed in each batch.
-- **Concurrency**: Control how many simultaneous API calls are made.
-- **Delay**: Set the delay between API calls to avoid throttling.
-
-## Workflow
-
-1. Run the identify script to find appraisers who need images
-2. Review the output JSON file to confirm the list of appraisers
-3. Run the generate script to create images for these appraisers
-4. Check the logs directory for detailed results of the image generation process
-
-## Example Output
-
-The scripts provide detailed console output and generate log files:
-
-```
-Starting appraiser image generation...
-Using image service: https://image-generation-service-856401495068.us-central1.run.app/api/generate
-Found 5 appraisers needing images.
-Processing 5 appraisers in 1 batches...
-Processing batch 1 of 1 (5 appraisers)
-Generating image for appraiser: John Smith (test-001)
-Generating image for appraiser: Jane Doe (test-002)
-Generating image for appraiser: Robert Johnson (test-003)
-...
-```
-
-## Troubleshooting
-
-- If the image generation service is unavailable, check the service status and URL.
-- For authentication issues, ensure the service has proper credentials.
-- If images are not being saved to ImageKit, verify the ImageKit configuration in the image generation service.
-
-## Contributing
-
-Improvements and bug fixes are welcome. Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request 
+This project is proprietary and confidential. All rights reserved. 

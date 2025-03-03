@@ -1,108 +1,55 @@
-# Main Netlify configuration file
-# Note: This configuration tells Netlify to use the pre-built files in the dist directory
+# Netlify configuration for the Appraisily monorepo
 
 [build]
-  # The directory to publish
+  command = "npm run build"
   publish = "dist"
-  # Use the complete build command to build all submodules
-  command = "npm ci && npm run build"
-  # If you need more memory for the build process
-  environment = { NODE_OPTIONS = "--max_old_space_size=4096" }
+  ignore = "git diff --quiet HEAD^ HEAD -- ./main_page ./art-appraisers-landing"
 
-# Explicitly handle asset files with correct MIME types
-[[headers]]
-  for = "/assets/*.css"
-    [headers.values]
-    Content-Type = "text/css"
-    Cache-Control = "public, max-age=31536000, immutable"
+[build.environment]
+  NODE_VERSION = "18"
+  SECRETS_SCAN_ENABLED = "false"
+  NPM_FLAGS = "--no-audit --no-fund"
+  
+# Create a dist directory by copying all submodule dist folders
+[build.processing]
+  skip_processing = false
 
-[[headers]]
-  for = "/assets/*.js"
-    [headers.values]
-    Content-Type = "application/javascript"
-    Cache-Control = "public, max-age=31536000, immutable"
-
-# Make sure assets are served correctly
+# Main Page Routes - Keep at root
 [[redirects]]
-  from = "/assets/*"
-  to = "/assets/:splat"
+  from = "/"
+  to = "/main_page/dist/index.html"
   status = 200
 
-# Don't redirect for static HTML pages that exist
+# Art Appraisers Landing Routes
 [[redirects]]
-  from = "/location/*"
-  to = "/location/:splat/index.html"
-  status = 200
-  force = false
-
-[[redirects]]
-  from = "/appraiser/*"
-  to = "/appraiser/:splat/index.html"
-  status = 200
-  force = false
-
-# Redirect all remaining routes to index.html for client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-# Additional header configurations
-[[headers]]
-  # Define headers for HTML files
-  for = "/*.html"
-    [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
-
-# Define headers for the sitemap - complete configuration
-[[headers]]
-  for = "/sitemap.xml"
-    [headers.values]
-    Cache-Control = "public, max-age=3600"
-    Content-Type = "application/xml"
-    X-Robots-Tag = "noarchive"
-
-# Redirect for the art appraiser directory
-[[redirects]]
-  from = "/directory/*"
-  to = "/directory/:splat"
-  status = 200
-
-# Redirect for the art appraisers landing pages
-[[redirects]]
-  from = "/art-appraiser/*"
-  to = "/landing/art-appraiser/:splat"
+  from = "/art-appraisers/*"
+  to = "/art-appraisers-landing/dist/index.html"
   status = 200
 
 [[redirects]]
   from = "/painting-value/*"
-  to = "/landing/painting-value/:splat"
+  to = "/art-appraisers-landing/dist/painting-value/index.html"
   status = 200
 
-# Redirect for the art appraisal screener pages
+# Assets and static files from main page
 [[redirects]]
-  from = "/screener/*"
-  to = "/screener/:splat"
+  from = "/assets/*"
+  to = "/main_page/dist/assets/:splat"
   status = 200
 
-# Redirects for image generation service API endpoints
+# Assets from landing page
 [[redirects]]
-  from = "/api/generate"
-  to = "/.netlify/functions/image-generation-proxy"
+  from = "/art-appraisers/assets/*"
+  to = "/art-appraisers-landing/dist/assets/:splat"
   status = 200
 
+# Handle fallback for client-side routing
 [[redirects]]
-  from = "/api/generate-bulk"
-  to = "/.netlify/functions/image-generation-proxy"
+  from = "/*"
+  to = "/main_page/dist/index.html"
   status = 200
 
-# Redirects for image generation service images
-[[redirects]]
-  from = "/images/*"
-  to = "/directory/images/appraisers/:splat"
-  status = 301
-
-# Security Headers
+# Security headers
 [[headers]]
   for = "/*"
   [headers.values]
@@ -110,22 +57,8 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = """
-      default-src 'self' https: data: blob:;
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.tawk.to https://embed.tawk.to https://cdn.jsdelivr.net https://unpkg.com https://*.appraisily.com https://www.googleadservices.com https://www.google-analytics.com https://googleads.g.doubleclick.net https://*.netlify.app;
-      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.tawk.to https://*.appraisily.com https://*.netlify.app;
-      img-src 'self' data: https: blob:;
-      font-src 'self' data: https://fonts.gstatic.com https://*.tawk.to;
-      connect-src 'self' https: wss://*.tawk.to wss://*.us-central1.run.app https://www.google-analytics.com https://stats.g.doubleclick.net;
-      frame-src 'self' https://*.tawk.to https://www.youtube.com https://www.googletagmanager.com https://*.appraisily.com;
-      worker-src 'self' blob:;
-      child-src blob:;
-      media-src 'self' https:;
-      object-src 'none';
-      base-uri 'self';
-      form-action 'self';
-      upgrade-insecure-requests;
-    """
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com; connect-src 'self' https://*.supabase.co https://api.appraisily.com; img-src 'self' data: https://images.appraisily.com https://*.supabase.co; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' data:; frame-src 'self'; object-src 'none'"
 
 # Cache static assets
 [[headers]]
